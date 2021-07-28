@@ -31,10 +31,11 @@
         }
     </style>
     <script src="./lib/angular/angular.min.js"></script>
+    <script src="./lib/angular/angular-locale_pt-br.js"></script>
     <script src="./lib/angular/angular-messages.min.js"></script>
     <script>
         angular.module("listaTelefonica", ["ngMessages"]);
-        angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function($scope) {
+        angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function($scope, $filter) {
             $scope.app = "Lista Telefonica";
 
 
@@ -42,15 +43,30 @@
             $scope.contatos = [{
                 nome: "Pedro",
                 telefone: "99999-8777",
-                cor: "blue"
+                data: new Date(),
+                operadora: {
+                    nome: "Oi",
+                    codigo: 14,
+                    categoria: "Celular"
+                }
             }, {
                 nome: "Ana",
                 telefone: "99889-8467",
-                cor: "yellow"
+                data: new Date(),
+                operadora: {
+                    nome: "Vivo",
+                    codigo: 15,
+                    categoria: "Celular"
+                }
             }, {
                 nome: "Maria",
                 telefone: "99799-8557",
-                cor: "red"
+                data: new Date(),
+                operadora: {
+                    nome: "Tim",
+                    codigo: 41,
+                    categoria: "Celular"
+                }
             }];
 
 
@@ -98,38 +114,42 @@
                     return contato.selecionado;
                 });
             };
+
+
+
+            $scope.ordernarPor = function(campo) {
+                $scope.criterioDeOrdenacao = campo;
+                $scope.direcaoDaOrdenacao = !$scope.direcaoDaOrdenacao;
+            };
         });
     </script>
 </head>
 
 <body ng-controller="listaTelefonicaCtrl">
-    <div class="jumbotron col-6">
+    <div class="jumbotron col-8">
         <h3>{{app}}</h3>
+        <input type="text" class="form-control" ng-model="criterioDeBusca" placeholder="O que você está buscando?">
         <table ng-show="contatos.length > 0" class="table table-striped">
             <tr>
                 <th></th>
-                <th>Nome</th>
-                <th>Telefone</th>
+                <th><a href="" ng-click="ordenarPor('nome')">Nome</a></th>
+                <th><a href="" ng-click="ordenarPor('telefone')">Telefone</a></th>
                 <th>Operadora</th>
-                <th></th>
+                <th>Data</th>
             </tr>
-            <tr ng-class="{'selecionado negrito': contato.selecionado}" ng-repeat="contato in contatos">
-                <td>
-                    <input type="checkbox" ng-model="contato.selecionado">
-                </td>
+            <tr ng-class="{'selecionado negrito': contato.selecionado}" ng-repeat="contato in contatos | filter:criterioDeBusca | orderBy:criterioDeOrdenacao:direcaoDaOrdenacao">
+                <td><input type="checkbox" ng-model="contato.selecionado"></td>
                 <td>{{contato.nome}}</td>
                 <td>{{contato.telefone}}</td>
                 <td>{{contato.operadora.nome}}</td>
-                <td>
-                    <div style="width: 20px; height: 20px" ng-style="{'background-color': contato.cor}"></div>
-                </td>
+                <td>{{contato.data | date: 'dd/MM/yyyy HH:mm'}}</td>
             </tr>
         </table>
         <hr>
         <form name="contatoForm">
             <input class="form-control" type="text" ng-model="contato.nome" name="nome" placeholder="Nome" ng-required="true" ng-minlength="10">
             <input class="form-control" type="text" ng-model="contato.telefone" name="telefone" placeholder="Telefone" ng-required="true" ng-pattern="/^\d{4,5}-\d{4}$/">
-            <select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras">
+            <select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome for operadora in operadoras | orderBy:'nome'">
                 <option value="">Selecione uma operadora</option>
             </select>
         </form>
