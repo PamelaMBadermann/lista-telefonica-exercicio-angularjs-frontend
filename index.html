@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html ng-app="listaTelefonica" lang="pt-BR">
+
+<head>
+    <title>Lista Telefonica</title>
+    <link href="./lib/bootstrap/bootstrap.css" rel="stylesheet">
+    <style>
+        .jumbotron {
+            width: 400px;
+            text-align: center;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #e9ecef;
+        }
+        
+        .table {
+            margin-top: 20px;
+        }
+        
+        .form-control {
+            margin-bottom: 5px;
+        }
+        
+        .selecionado {
+            background-color: yellow;
+        }
+    </style>
+    <script src="./lib/angular/angular.js"></script>
+    <script>
+        angular.module("listaTelefonica", []);
+        angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function($scope) {
+            $scope.app = "Lista Telefonica";
+
+            $scope.contatos = [{
+                nome: "Pedro",
+                telefone: "99999-8777"
+            }, {
+                nome: "Ana",
+                telefone: "99889-8467"
+            }, {
+                nome: "Maria",
+                telefone: "99799-8557"
+            }];
+
+            $scope.operadoras = [{
+                nome: "Oi",
+                codigo: 14,
+                categoria: "Celular"
+            }, {
+                nome: "Vivo",
+                codigo: 15,
+                categoria: "Celular"
+            }, {
+                nome: "Tim",
+                codigo: 41,
+                categoria: "Celular"
+            }, {
+                nome: "GVT",
+                codigo: 25,
+                categoria: "Fixo"
+            }, {
+                nome: "Embratel",
+                codigo: 21,
+                categoria: "Fixo"
+            }];
+
+            $scope.adicionarContato = function(contato) {
+                $scope.contatos.push(angular.copy(contato));
+                delete $scope.contato;
+            }
+        });
+    </script>
+</head>
+
+<body ng-controller="listaTelefonicaCtrl">
+    <div class="jumbotron">
+        <h3>{{app}}</h3>
+        <table class="table">
+            <!-- table-striped -->
+            <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Operadora</th>
+            </tr>
+            <tr class="selecionado" ng-repeat="contato in contatos">
+                <td>{{contato.nome}}</td>
+                <td>{{contato.telefone}}</td>
+                <td>{{contato.operadora.nome}}</td>
+            </tr>
+        </table>
+        <hr>
+        <input class="form-control" type="text" ng-model="contato.nome" placeholder="Nome">
+        <input class="form-control" type="text" ng-model="contato.telefone" placeholder="Telefone">
+        <select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras">
+            <option value="">Selecione uma operadora</option>
+        </select>
+        <button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="!contato.nome || !contato.telefone">Adicionar Contato</button> {{contato}}
+    </div>
+</body>
+
+</html>
