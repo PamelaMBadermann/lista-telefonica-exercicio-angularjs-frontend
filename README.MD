@@ -1,11 +1,11 @@
-var get = function (url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            callback(xhr.responseText, xhr.status);
-        }
-    };
-    xhr.open('GET', url);
-    xhr.send(null);
-};
+# Phone Book with AngularJS
 
+## Description
+
+This is a implementation of a phone book using AngularJS.
+
+This project was only designed for studying.
+I'm using AngularJS, and Bootstrap;
+
+
+![Print of the Phone Book](./assets/image-bg.png)
